@@ -1,0 +1,62 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1>Employees</h1>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of employees | async">
+                    <td>{{employee.firstName}}</td>
+                    <td>{{employee.lastName}}</td>
+                    <td>{{employee.emailId}}</td>
+                    <td><button (click)="deleteEmployee(employee.id)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+CreateEmployeeComponent - create-employee.component.ts
+CreateEmployeeComponent is used to create and handle a new employee form data. Add the following code to it -
+import { EmployeeService } from './../employee.service';
+import { Employee } from './../employee';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-create-employee',
+  templateUrl: './create-employee.component.html',
+  styleUrls: ['./create-employee.component.css']
+})
+export class CreateEmployeeComponent implements OnInit {
+
+  employee: Employee = new Employee();
+  submitted = false;
+
+  constructor(private employeeService: EmployeeService) { }
+
+  ngOnInit() {
+  }
+
+  newEmployee(): void {
+    this.submitted = false;
+    this.employee = new Employee();
+  }
+
+  save() {
+    this.employeeService.createEmployee(this.employee)
+      .subscribe(data => console.log(data), error => console.log(error));
+    this.employee = new Employee();
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    this.save();
+  }
+}
